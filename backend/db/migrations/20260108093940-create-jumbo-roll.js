@@ -13,8 +13,9 @@ module.exports = {
       },
 
       invoice_no: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
 
       supplier: {
@@ -25,18 +26,15 @@ module.exports = {
       weight_kg: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
-        validate: {
-          min: 0.01,
-        },
+        validate: { min: 0.01 },
       },
 
       cost_afn: {
         type: DataTypes.DECIMAL(15, 2),
         allowNull: false,
-        validate: {
-          min: 0,
-        },
+        validate: { min: 0 },
       },
+
       warehouse_location: {
         type: DataTypes.STRING(100),
         allowNull: false,
@@ -45,25 +43,7 @@ module.exports = {
       remaining_weight_kg: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
-        validate: {
-          min: 0,
-        },
-      },
-
-      received_date: {
-        type: DataTypes.DATEONLY,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
-
-      created_at: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-      },
-
-      updated_at: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
+        validate: { min: 0 },
       },
     });
   },

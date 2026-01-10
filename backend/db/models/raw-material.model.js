@@ -12,8 +12,9 @@ const RawMaterialLot = sequelize.define(
     },
 
     invoice_no: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
 
     supplier: {
@@ -24,18 +25,15 @@ const RawMaterialLot = sequelize.define(
     weight_kg: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
-      validate: {
-        min: 0.01,
-      },
+      validate: { min: 0.01 },
     },
 
     cost_afn: {
       type: DataTypes.DECIMAL(15, 2),
       allowNull: false,
-      validate: {
-        min: 0,
-      },
+      validate: { min: 0 },
     },
+
     warehouse_location: {
       type: DataTypes.STRING(100),
       allowNull: false,
@@ -44,32 +42,28 @@ const RawMaterialLot = sequelize.define(
     remaining_weight_kg: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
-      validate: {
-        min: 0,
-      },
-    },
-
-    received_date: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
-
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-
-    updated_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
+      validate: { min: 0 },
     },
   },
   {
-    sequelize,
-    modelName: "RawMaterialLot",
     tableName: "raw_material_lots",
-    timestamps: false, // because we manually use created_at & updated_at
+
+    // Let Sequelize manage timestamps
+    timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "updated_at",
+
+    hooks: {
+      beforeCreate: (rawMaterialLot) => {
+        const datePart = new Date()
+          .toISOString()
+          .slice(0, 10)
+          .replace(/-/g, "");
+        const randomPart = Math.floor(1000 + Math.random() * 9000);
+
+        rawMaterialLot.invoice_no = `INV-${datePart}-${randomPart}`;
+      },
+    },
   }
 );
 
