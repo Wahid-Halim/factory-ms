@@ -4,12 +4,12 @@ const app = express();
 const cors = require("cors");
 
 //router
-const jumboRoutes = require("./routes/raw-material.routes.js");
+const rawMaterialRoutes = require("./routes/raw-material.routes.js");
 
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/v1/raw-material", jumboRoutes);
+app.use("/api/v1/raw-material", rawMaterialRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello from the backend!");

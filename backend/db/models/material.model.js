@@ -44,10 +44,19 @@ const RawMaterial = sequelize.define(
       allowNull: false,
       validate: { min: 0 },
     },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+    },
   },
   {
-    timestamps: true,
     tableName: "raw_materials",
+    sequelize,
+    modelName: "RawMaterial",
     hooks: {
       beforeValidate: (lot) => {
         if (!lot.invoice_no) {
