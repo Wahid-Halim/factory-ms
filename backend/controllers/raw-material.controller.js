@@ -1,4 +1,4 @@
-const RawMaterial = require("../db/models/material.model");
+const { RawMaterial } = require("../db/models");
 
 const addRawMaterial = async (req, res) => {
   try {

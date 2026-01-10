@@ -19,12 +19,12 @@ module.exports = {
         allowNull: false,
       },
       weight_kg: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
         validate: { min: 0.01 },
       },
       cost_afn: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.DECIMAL(15, 2),
         allowNull: false,
         validate: { min: 0 },
       },
@@ -33,7 +33,7 @@ module.exports = {
         allowNull: false,
       },
       remaining_weight_kg: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
         validate: { min: 0 },
       },

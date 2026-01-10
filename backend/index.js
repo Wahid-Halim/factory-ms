@@ -5,11 +5,13 @@ const cors = require("cors");
 
 //router
 const rawMaterialRoutes = require("./routes/raw-material.routes.js");
+const productionRoutes = require("./routes/production.routes.js");
 
 app.use(cors());
 app.use(express.json());
 
 app.use("/api/v1/raw-material", rawMaterialRoutes);
+app.use("/api/v1/production", productionRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello from the backend!");

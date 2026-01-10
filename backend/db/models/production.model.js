@@ -2,76 +2,68 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  class RawMaterial extends Model {
+  class Production extends Model {
     static associate(models) {
-      RawMaterial.belongsToMany(models.Production, {
+      Production.belongsToMany(models.RawMaterial, {
         through: models.ProductionRawMaterial,
-        foreignKey: "raw_material_id",
-        otherKey: "production_id",
-        as: "productions",
+        foreignKey: "production_id",
+        otherKey: "raw_material_id",
+        as: "rawMaterials",
       });
-      RawMaterial.hasMany(models.ProductionRawMaterial, {
-        foreignKey: "raw_material_id",
+      Production.hasMany(models.ProductionRawMaterial, {
+        foreignKey: "production_id",
         as: "productionRawMaterials",
       });
     }
   }
 
-  RawMaterial.init(
+  Production.init(
     {
       id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      invoice_no: {
-        type: DataTypes.STRING,
+      batch_code: {
+        type: DataTypes.STRING(50),
         allowNull: false,
         unique: true,
       },
-      supplier: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-      },
-      weight_kg: {
+      material_used_kg: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
         validate: { min: 0.01 },
       },
-      cost_afn: {
-        type: DataTypes.DECIMAL(15, 2),
+      output_cartons: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-        validate: { min: 0 },
+        validate: { min: 1 },
       },
-      warehouse_location: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
-      },
-      remaining_weight_kg: {
+      waste_kg: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
         validate: { min: 0 },
       },
     },
     {
-      tableName: "raw_materials",
+      tableName: "productions",
       sequelize,
-      modelName: "RawMaterial",
+      modelName: "Production",
       hooks: {
-        beforeValidate: (lot) => {
-          if (!lot.invoice_no) {
+        beforeValidate: (production) => {
+          if (!production.batch_code) {
             const now = new Date();
             const yy = String(now.getFullYear()).slice(-2);
             const mm = String(now.getMonth() + 1).padStart(2, "0");
             const dd = String(now.getDate()).padStart(2, "0");
             const datePart = yy + mm + dd;
             const randomPart = Math.floor(1000 + Math.random() * 9000);
-            lot.invoice_no = `INV-${datePart}-${randomPart}`;
+            production.batch_code = `BATCH-${datePart}-${randomPart}`;
           }
         },
       },
     }
   );
 
-  return RawMaterial;
+  return Production;
 };
