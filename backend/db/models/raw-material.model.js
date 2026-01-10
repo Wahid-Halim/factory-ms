@@ -1,9 +1,9 @@
 "use strict";
-const { DataTypes } = require("sequelize");
 const sequelize = require("../../config/database");
+const { DataTypes } = require("sequelize");
 
-const RawMaterialLot = sequelize.define(
-  "RawMaterialLot",
+const RawMaterial = sequelize.define(
+  "RawMaterial",
   {
     id: {
       type: DataTypes.UUID,
@@ -46,25 +46,24 @@ const RawMaterialLot = sequelize.define(
     },
   },
   {
-    tableName: "raw_material_lots",
-
-    // Let Sequelize manage timestamps
     timestamps: true,
-    createdAt: "created_at",
-    updatedAt: "updated_at",
-
+    tableName: "raw_materials",
     hooks: {
-      beforeCreate: (rawMaterialLot) => {
-        const datePart = new Date()
-          .toISOString()
-          .slice(0, 10)
-          .replace(/-/g, "");
-        const randomPart = Math.floor(1000 + Math.random() * 9000);
+      beforeValidate: (lot) => {
+        if (!lot.invoice_no) {
+          const now = new Date();
+          const yy = String(now.getFullYear()).slice(-2);
+          const mm = String(now.getMonth() + 1).padStart(2, "0");
+          const dd = String(now.getDate()).padStart(2, "0");
+          const datePart = yy + mm + dd;
 
-        rawMaterialLot.invoice_no = `INV-${datePart}-${randomPart}`;
+          const randomPart = Math.floor(1000 + Math.random() * 9000);
+
+          lot.invoice_no = `INV-${datePart}-${randomPart}`;
+        }
       },
     },
   }
 );
 
-module.exports = RawMaterialLot;
+module.exports = RawMaterial;
